@@ -23,7 +23,14 @@ Select active emergency encounters where 'doc1' is attending or admiting physici
 
 To generate test data:
 
-env FHIR_NUM=1000 FHIR_HOME=`pwd` psql -d <db> < generate_encounters.sql
+```bash
+
+  git clone https://github.com/niquola/fhir_cases_for_jsonp.git
+
+  cd fhir_cases_for_jsonp
+
+  env FHIR_NUM=1000 FHIR_HOME=`pwd` psql -d <db> < generate_encounters.sql
+```
 
 
 Generation script in generate_encouters.sh
