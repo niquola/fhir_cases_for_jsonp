@@ -1,6 +1,4 @@
-Cases for jsonp from Medclient Production Cases
-
-
+Cases for jsonp by Medclient HS-Choice
 
 
 1. My Encounters for emergency:
