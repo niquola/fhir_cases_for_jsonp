@@ -24,9 +24,3 @@ initdb
 
 echo "host    all             all             0.0.0.0/0            trust" >> /home/vagrant/data/pg_hba.conf
 pg_ctl -D /home/vagrant/data/ -l pg.log start
-
-
-sudo apt-get install subversion
-svn checkout http://v8.googlecode.com/svn/trunk/ v8
-cd v8
-make dependeincies
