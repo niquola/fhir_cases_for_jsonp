@@ -7,12 +7,11 @@
   "identifier": [
   {
     "use": "temp",
-    "value": "$encounter_identifier$"
+    "value": "{{id}}"
   }],
   "status": "active",
-  "class": "$encouter_type$",
-  "type": [
-  {
+  "class": "{{type}}",
+  "type": [{
     "coding": [
     {
       "system": "http://snomed.info/sct",
@@ -30,14 +29,14 @@
       "type": [{
         "coding": [{
           "system": "encounter-participant-type",
-          "code": "$encounter_participant_type$"
+          "code": "{{part_type}}"
         }]
       }],
       "reference": "$practicioner$"
     }
   }],
   "reason": {
-    "text": "$encounter_reason$"
+    "text": "{{reason}}"
   },
   "priority": {
     "coding": [
@@ -57,8 +56,8 @@
       }]
     },
     "period": {
-      "start": "$encounter_period_start$",
-      "end": "$encounter_period_end$"
+      "start": "{{start_at}}",
+      "end": "$end_at$"
     },
     "diet": {
       "coding": [
