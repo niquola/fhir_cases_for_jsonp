@@ -1,9 +1,11 @@
 --db:jsonp
 --{{{
-DROP TABLE IF EXISTS encounters;
-CREATE TABLE encounters (doc json);
+\set prog `echo "cd $FHIR_HOME && bash generate_encounters.sh $FHIR_NUM"`
 
-COPY encounters FROM PROGRAM 'cd /home/nicola/w/jsonp_fhir && bash generate_encounters.sh';
+DROP TABLE IF EXISTS encounters;
+CREATE TABLE encounters (id SERIAL primary key, doc json);
+
+COPY encounters (doc) FROM PROGRAM :'prog';
 
 select * from encounters
 limit 10;

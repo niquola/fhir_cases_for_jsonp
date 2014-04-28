@@ -1,15 +1,18 @@
-num_rows=100000
+num_rows=$1
+
 tpl=`cat encounter.tpl.json`
 types=("emergency" "inpatient")
 part_types=("ADM" "ATND" "CALLBCK" "CON" "DIS" "ESC" "REF")
 physs=( "Charles R. Drew" "Helen Flanders Dunbar" "Galen" "Ian Olver" "Garcia de Orta" "Christiaan Eijkman" "Pierre Fauchard" "Rene Geronimo Favaloro" "Alexander Fleming" "Girolamo Fracastoro" "Sigmund Freud" "Daniel Carleton Gajdusek" "Henry Gray" "George E. Goodfellow" "William Harvey" "Ernst Haeckel" "Henry Heimlich" "Orvan Hess" "John Hunter" "Hippocrates" "Elliott P. Joslin" "Edward Jenner")
+statuses=('planned' 'finished' 'cancelled' 'active')
 
-for ((i = 1; i <= $num_rows; i++)); do
+for ((i = 1; i <=$num_rows; i++)); do
 
   type=${types[$i%2]}
   part_type=${part_types[$i%7]}
   phys=${physs[$i%21]}
   reason="reason$i"
+  status=${statuses[$i%4]}
 
   rand_y=$((RANDOM%1+2013))
   rand_m=$((RANDOM%11+1))
@@ -29,7 +32,7 @@ for ((i = 1; i <= $num_rows; i++)); do
     -e "s/{{reason}}/$reason/"  \
     -e "s/{{start_at}}/$start_at/"  \
     -e "s/{{end_at}}/$end_at/"  \
-    -e "s/{{status}}/finished/"  \
+    -e "s/{{status}}/$status/"  \
     -e "s/{{phys}}/$phys/"  \
     -e ':a;N;$!ba;s/\n/ /g'
 done
