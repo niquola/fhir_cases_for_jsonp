@@ -1,0 +1,76 @@
+{
+  "resourceType": "Encounter",
+  "text": {
+    "status": "generated",
+    "div": "text"
+  },
+  "identifier": [
+  {
+    "use": "temp",
+    "value": "$encounter_identifier$"
+  }],
+  "status": "active",
+  "class": "$encouter_type$",
+  "type": [
+  {
+    "coding": [
+    {
+      "system": "http://snomed.info/sct",
+      "code": "183807002",
+      "display": "Inpatient stay for nine days"
+    }
+    ]
+  }],
+  "subject": {
+    "reference": "Patient/f201",
+    "display": "Roel"
+  },
+  "participant": [{
+    "individual": {
+      "type": [{
+        "coding": [{
+          "system": "encounter-participant-type",
+          "code": "$encounter_participant_type$"
+        }]
+      }],
+      "reference": "$practicioner$"
+    }
+  }],
+  "reason": {
+    "text": "$encounter_reason$"
+  },
+  "priority": {
+    "coding": [
+    {
+      "system": "http://snomed.info/sct",
+      "code": "394849002",
+      "display": "High priority"
+    }
+    ]
+  },
+  "hospitalization": {
+    "admitSource": {
+      "coding": [ {
+        "system": "http://snomed.info/sct",
+        "code": "309902002",
+        "display": "Clinical Oncology Department"
+      }]
+    },
+    "period": {
+      "start": "$encounter_period_start$",
+      "end": "$encounter_period_end$"
+    },
+    "diet": {
+      "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "276026009",
+        "display": "Fluid balance regulation"
+      }]
+    },
+    "reAdmission": false
+  },
+  "serviceProvider": {
+    "reference": "Organization/f201"
+  }
+}
