@@ -16,7 +16,7 @@ for ((i = 1; i <=$num_rows; i++)); do
 
   rand_y=$((RANDOM%1+2013))
   rand_m=$((RANDOM%11+1))
-  rand_d=$((RANDOM%20+1))
+  rand_d=$((RANDOM%15+1))
   rand_ed=$((rand_d + RANDOM%10+1))
   start_at=`date -d "$rand_y-$rand_m-$rand_d" '+%Y-%m-%d'`
   end_at=`date -d "$rand_y-$rand_m-$rand_ed" '+%Y-%m-%d'`
