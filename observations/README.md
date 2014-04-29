@@ -12,11 +12,6 @@ name: body temperature or blood pressure
 {
   "coding": [
     {
-      "system": "http://snomed.info/sct",
-      "code": "415945006",
-      "display": "Oral temperature"
-    },
-    {
       "system": "http://loinc.org",
       "code": "8310-5",
       "display": "Body temperature"
