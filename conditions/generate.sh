@@ -1,14 +1,18 @@
 num_rows=$1
 
-tpl=`cat template.json`
+subject_displays=("P. van de Heuvel" "foo")
 
+# tpl=`cat template.json`
 for ((i = 1; i <=$num_rows; i++)); do
 
-  type=${types[$i%2]}
-  part_type=${part_types[$i%7]}
-  phys=${physs[$i%21]}
+  subject_display=${subject_displays[$i%2]}
+  echo $subject_display
+
+  # type=${types[$i%2]}
+  # part_type=${part_types[$i%7]}
+  # phys=${physs[$i%21]}
   reason="reason$i"
-  status=${statuses[$i%4]}
+  # status=${statuses[$i%4]}
 
   rand_y=$((RANDOM%1+2013))
   rand_m=$((RANDOM%11+1))
