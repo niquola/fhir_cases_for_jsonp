@@ -5,8 +5,8 @@ names=(
     '"name": {"coding": [{"system": "http://loinc.org", "code": "55284-4", "display": "Blood pressure systolic \& diastolic"}]},'
 )
 applies=(
-    '"appliesDateTime": "2014-01-29T09:30:10+01:00",'
-    '"appliesPeriod": {"start": "2013-04-02T09:30:10+01:00", "end": "2013-04-05T09:30:10+01:00"},'
+    '"appliesDateTime": "{{rand_date}}T09:30:10+01:00",'
+    '"appliesPeriod": {"start": "{{rand_date}}T09:30:10+01:00", "end": "{{rand_date2}}T09:30:10+01:00"},'
 )
 statuses=(
     "amended"
@@ -30,7 +30,17 @@ for ((i = 1; i <= $num_rows; i++)); do
 
     apply_index=$((RANDOM%3))
     if (($apply_index < 2)); then
-        apply=${applies[$apply_index]}
+        rand_y=$((RANDOM%2+2013))
+        rand_m=$((RANDOM%11+1))
+        rand_d=$((RANDOM%15+1))
+        rand_d2=$(($rand_d+3))
+        rand_date=`date -d "$rand_y-$rand_m-$rand_d" '+%Y-%m-%d'`
+        rand_date2=`date -d "$rand_y-$rand_m-$rand_d2" '+%Y-%m-%d'`
+        apply=$(
+            echo ${applies[$apply_index]} \
+                | sed -e "s/{{rand_date}}/$rand_date/" \
+                      -e "s/{{rand_date2}}/$rand_date2/"
+        )
     else
         apply=""
     fi
