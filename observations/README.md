@@ -2,7 +2,7 @@
 
 ### Observation
 
-select all body temperature observations for last 3 month
+select all body temperature and blood pressure observations for last 3 month
 
 FHIR resource Observation - http://www.hl7.org/implement/standards/fhir/observation.html#resource
 
