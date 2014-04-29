@@ -6,6 +6,8 @@
 select all heart diagnoses for last 3 month
 for measures calculation
 
+FHIR resource Condition - http://www.hl7.org/implement/standards/fhir/condition.html#resource
+
 
 ```javascript
 status = "confirmed"
