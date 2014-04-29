@@ -49,7 +49,7 @@ appliesPeriod = {"end": greater_than_or_equal("2014-01-29T09:30:10+01:00")}
 
 OR
 
-appliesDateTime >= 2014-01-29T09:30:10+01:00",
+appliesDateTime >= "2014-01-29T09:30:10+01:00",
 
 ```
 
