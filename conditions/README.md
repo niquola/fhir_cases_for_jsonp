@@ -1,9 +1,12 @@
 Cases for jsonp by Medclient HS-Choice
 
-## Select all heart deceases
+## First step in quality measures
+
+select all heart diagnoses for last 3 month
+for measures calculation
+
 
 ```
-
 status = "confirmed"
 
 category.coding = {
@@ -12,26 +15,20 @@ category.coding = {
   "display": "diagnosis"
 }
 
-dateAsserted > 1 month
+dateAsserted > CURRENT_DATE - INTERVAL '3 months'
 
 code.coding = {
   "system": "http://snomed.info/sct",
-  "code": in (select code from value_sets.stroke_cases)
+  "code": in (select code from stroke_cases_value_set)
 }
-
 
 ```
 
-To generate test data:
+To generate & fill conditions table and stroke_diagnoses table
 
 ```bash
 
-  git clone https://github.com/niquola/fhir_cases_for_jsonp.git
-
-  cd fhir_cases_for_jsonp/conditions
+  cd conditions
 
   env FHIR_NUM=1000 FHIR_HOME=`pwd` psql -d <db> < generate.sql
 ```
-
-
-Generation script in generate_encouters.sh

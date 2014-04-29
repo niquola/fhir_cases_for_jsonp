@@ -5,44 +5,41 @@
     "div": "some text"
   },
   "subject": {
-    "reference": "Patient/f001",
-    "display": "P. van de Heuvel"
+    "reference": "Patient/{{idx}}",
+    "display": "Patient {{idx}}"
   },
   "encounter": {
-    "reference": "Encounter/f001"
+    "reference": "Encounter/{{idx}}"
   },
   "asserter": {
     "reference": "Patient/f001",
     "display": "P. van de Heuvel"
   },
-  "dateAsserted": "2011-10-05",
+  "dateAsserted": "{{time_at}}",
   "code": {
     "coding": [{
       "system": "http://snomed.info/sct",
-      "code": "368009",
-      "display": "Heart valve disorder"
+      "code": "{{code}}",
+      "display": "{{label}}"
     }]
   },
   "category": {
-    "coding": [
-    {
+    "coding": [{
       "system": "http://snomed.info/sct",
-      "code": "439401001",
-      "display": "diagnosis"
+      "code": "{{category}}",
+      "display": "{{category}}"
     }]
   },
-  "status": "confirmed",
+  "status": "{{status}}",
   "severity": {
-    "coding": [
-    {
+    "coding": [{
       "system": "http://snomed.info/sct",
       "code": "6736007",
       "display": "Moderate"
     }]
   },
-  "onsetDate": "2011-08-05",
-  "evidence": [
-  {
+  "onsetDate": "{{time_at}}",
+  "evidence": [ {
     "code": {
       "coding": [
       {
@@ -54,8 +51,7 @@
   }],
   "location": [{
     "code": {
-      "coding": [
-      {
+      "coding": [ {
         "system": "http://snomed.info/sct",
         "code": "40768004",
         "display": "Left thorax"
