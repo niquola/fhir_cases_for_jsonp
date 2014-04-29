@@ -6,8 +6,10 @@ select all body temperature observations for last 3 month
 
 FHIR resource Observation - http://www.hl7.org/implement/standards/fhir/observation.html#resource
 
+name: body temperature or blood pressure
+
 ```javascript
-name = {
+{
   "coding": [
     {
       "system": "http://snomed.info/sct",
@@ -23,6 +25,20 @@ name = {
   "text": "Body temperature"
 }
 
+OR
+
+{
+  "coding": [
+    {
+      "system": "http://loinc.org",
+      "code": "55284-4",
+      "display": "Blood pressure systolic & diastolic"
+    }
+  ]
+},
+```
+
+```javascript
 status = "final"
 ```
 
