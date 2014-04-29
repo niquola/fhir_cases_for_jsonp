@@ -53,7 +53,7 @@ appliesDateTime >= "2014-01-29T09:30:10+01:00",
 
 ```
 
-To generate & fill conditions table and stroke_diagnoses table
+To generate & fill observations table
 
 ```bash
 
