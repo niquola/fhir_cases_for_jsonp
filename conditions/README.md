@@ -1,6 +1,7 @@
-Cases for jsonp by Medclient HS-Choice
+## Cases for jsonp by Medclient HS-Choice
 
-## First step in quality measures
+
+### First step in quality measures
 
 select all heart diagnoses for last 3 month
 for measures calculation
