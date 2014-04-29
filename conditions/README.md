@@ -7,7 +7,7 @@ select all heart diagnoses for last 3 month
 for measures calculation
 
 
-```
+```javascript
 status = "confirmed"
 
 category.coding = {
