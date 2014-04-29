@@ -14,10 +14,17 @@ statuses=(
 
 for ((i = 1; i <= $num_rows; i++)); do
     patient_id=$(($i%1000))
-    name=${names[$((RANDOM%1))]}
     status=${statuses[$((RANDOM%6))]}
+
+    name_index=$((RANDOM%2))
+    if (($name_index <= 0)); then
+        name=${names[$name_index]}
+    else
+        name="\"name\": {\"coding\": [{\"system\": \"http://loinc.org\", \"code\": \"noise-$name_index\", \"display\": \"noise $name_index\"}], \"text\": \"Noise $name_index\"}"
+    fi
+
     sed -e "s/{{patient_id}}/$patient_id/g"  \
-        -e "s@{{name}}@$name@g" \
+        -e "s@{{name}}@$name@" \
         -e "s/{{status}}/$status/g" \
         template.json
 done
