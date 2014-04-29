@@ -1,9 +1,11 @@
 num_rows=$1
 
-for ((i = 1; i <=$num_rows; i++)); do
+statuses=("final")
 
-    # sed -e s/{{id}}/$i/  \
-    #     -e "s/{{status}}/$status/g"  \
-    #     -e "s/{{i}}/$i/g" \
-    #     template.json
+for ((i = 1; i <= $num_rows; i++)); do
+    status=${statuses[$((RANDOM%1))]}
+    patient_id=$(($i%1000))
+    sed -e s/{{patient_id}}/$patient_id/  \
+        -e "s/{{status}}/$status/g" \
+        template.json
 done

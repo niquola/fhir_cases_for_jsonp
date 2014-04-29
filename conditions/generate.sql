@@ -32,7 +32,7 @@ COPY stroke_diagnoses (id, label, code, description, icd9cm_id) FROM stdin;
 DROP TABLE IF EXISTS encounters;
 CREATE TABLE encounters (
   id SERIAL primary key,
-  doc json
+  doc jsonp
 );
 
 COPY encounters (doc) FROM PROGRAM :'prog';
