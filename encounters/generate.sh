@@ -1,6 +1,6 @@
 # Profiling:
 # $ `time bash ./generate.sh 1000 > /dev/nul`
-# real    0m4.969s - 0m5.002s
+# real    ~ 0m4.730s
 
 num_rows=$1
 
@@ -42,9 +42,10 @@ for ((i = 1; i <= $num_rows; i++)); do
     rand_y=$((RANDOM%1+2013))
     rand_m=$((RANDOM%11+1))
     rand_d=$((RANDOM%15+1))
-    rand_ed=$((rand_d + RANDOM%10+1))
-    start_at=`date -d "$rand_y-$rand_m-$rand_d" '+%Y-%m-%d'`
-    end_at=`date -d "$rand_y-$rand_m-$rand_ed" '+%Y-%m-%d'`
+    rand_d2=$((rand_d + RANDOM%10+1))
+    rand_date=`date -d "$rand_y-$rand_m-$rand_d" '+%Y-%m'`
+    start_at="${rand_date}-"$rand_d
+    end_at="${rand_date}-"$rand_d2
 
     sed -e ':a;N;$!ba;s/\n/ /g' \
         -e s/{{id}}/$i/  \
@@ -56,5 +57,5 @@ for ((i = 1; i <= $num_rows; i++)); do
         -e "s/{{end_at}}/$end_at/"  \
         -e "s/{{status}}/$status/"  \
         -e "s/{{phys}}/$phys/"  \
-        encounter.tpl.json
+        template.json
 done
