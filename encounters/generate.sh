@@ -9,7 +9,7 @@ part_types=("ADM" "ATND" "CALLBCK" "CON" "DIS" "ESC" "REF")
 physs=("Charles R. Drew" "Helen Flanders Dunbar" "Galen" "Ian Olver" "Garcia de Orta" "Christiaan Eijkman" "Pierre Fauchard" "Rene Geronimo Favaloro" "Alexander Fleming" "Girolamo Fracastoro" "Sigmund Freud" "Daniel Carleton Gajdusek" "Henry Gray" "George E. Goodfellow" "William Harvey" "Ernst Haeckel" "Henry Heimlich" "Orvan Hess" "John Hunter" "Hippocrates" "Elliott P. Joslin" "Edward Jenner")
 statuses=('planned' 'finished' 'cancelled' 'active')
 
-for ((i = 1; i <=$num_rows; i++)); do
+for ((i = 1; i <= $num_rows; i++)); do
 
     type=${types[$i%2]}
     part_type=${part_types[$i%7]}
