@@ -1,12 +1,12 @@
+# Profiling:
+# $ `time bash ./generate.sh 1000 > /dev/nul`
+# real    0m3.459s - 0m3.493s
+
 num_rows=$1
 
-
 tpl=`cat template.json`
-
 statuses=("provisional" "working" "confirmed" "refuted")
-
 categories=( "complaint" "symptom" "finding" "diagnosis")
-
 
 codes=(
 "433.01"
@@ -40,14 +40,12 @@ labels=(
 "SUBARACHNOID HEMORRHAGE"
 "INTRACEREBRAL HEMORRHAGE")
 
-
 # tpl=`cat template.json`
 for ((i = 1; i <=$num_rows; i++)); do
 
   status=${statuses[$((RANDOM%4))]}
   category=${categories[$((RANDOM%4))]}
   idx=$(($i%1000))
-
 
   rand_y=$((RANDOM%1+2013))
   rand_m=$((RANDOM%11+1))
@@ -64,9 +62,6 @@ else
   code="noise-$rand_code"
   label="noise-$rand_code"
 fi
-
-
-  # cat `pwd`/encounter.tpl.json  \
 
     echo $tpl | sed -e s/{{id}}/$i/  \
     -e "s/{{status}}/$status/g"  \
