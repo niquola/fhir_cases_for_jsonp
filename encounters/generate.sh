@@ -33,12 +33,11 @@ physs=(
 statuses=('planned' 'finished' 'cancelled' 'active')
 
 for ((i = 1; i <= $num_rows; i++)); do
-
-    type=${types[$i%2]}
-    part_type=${part_types[$i%7]}
-    phys=${physs[$i%21]}
+    type=${types[$((RANDOM%2))]}
+    part_type=${part_types[$((RANDOM%7))]}
+    phys=${physs[$((RANDOM%22))]}
     reason="reason$i"
-    status=${statuses[$i%4]}
+    status=${statuses[$((RANDOM%4))]}
 
     rand_y=$((RANDOM%1+2013))
     rand_m=$((RANDOM%11+1))
