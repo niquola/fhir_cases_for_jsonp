@@ -1,4 +1,4 @@
---db:jsonp
+--db: -p 5455 -h localhost jsonb
 --{{{
 \set prog `echo "cd $FHIR_HOME && bash generate.sh $FHIR_NUM"`
 
@@ -10,7 +10,6 @@ CREATE TABLE stroke_diagnoses (
     description character varying(255),
     icd9cm_id integer
 );
-
 
 COPY stroke_diagnoses (id, label, code, description, icd9cm_id) FROM stdin;
 1	OCL BSLR ART W INFRCT	433.01	Ischemic Stroke	28072
@@ -32,7 +31,7 @@ COPY stroke_diagnoses (id, label, code, description, icd9cm_id) FROM stdin;
 DROP TABLE IF EXISTS encounters;
 CREATE TABLE encounters (
   id SERIAL primary key,
-  doc jsonp
+  doc jsonb
 );
 
 COPY encounters (doc) FROM PROGRAM :'prog';
