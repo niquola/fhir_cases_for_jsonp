@@ -53,5 +53,6 @@ for ((i = 1; i <= $num_rows; i++)); do
         -e "s@{{name}}@$name@" \
         -e "s@{{applies}}@$apply@" \
         -e "s/{{status}}/$status/g" \
+        -e ':a;N;$!ba;s/\n/ /g' \
         template.json
 done
