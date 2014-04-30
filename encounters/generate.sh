@@ -1,3 +1,7 @@
+# Profiling:
+# $ `time bash ./generate.sh 1000 > /dev/nul`
+# real    0m4.969s - 0m5.002s
+
 num_rows=$1
 
 tpl=`cat encounter.tpl.json`

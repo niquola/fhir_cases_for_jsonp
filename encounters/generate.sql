@@ -1,6 +1,6 @@
 --db:jsonp
 --{{{
-\set prog `echo "cd $FHIR_HOME && bash generate_encounters.sh $FHIR_NUM"`
+\set prog `echo "cd $FHIR_HOME && bash generate.sh $FHIR_NUM"`
 
 DROP TABLE IF EXISTS encounters;
 CREATE TABLE encounters (

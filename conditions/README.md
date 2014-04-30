@@ -31,7 +31,7 @@ To generate & fill conditions table and stroke_diagnoses table
 
 ```bash
 
-  cd conditions
+  cd fhir_cases_for_jsonp/conditions
 
   env FHIR_NUM=1000 FHIR_HOME=`pwd` psql -d <db> < generate.sql
 ```

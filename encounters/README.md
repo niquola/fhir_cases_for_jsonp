@@ -103,9 +103,9 @@ To generate test data:
 
   git clone https://github.com/niquola/fhir_cases_for_jsonp.git
 
-  cd fhir_cases_for_jsonp
+  cd fhir_cases_for_jsonp/encounters
 
-  env FHIR_NUM=1000 FHIR_HOME=`pwd` psql -d <db> < generate_encounters.sql
+  env FHIR_NUM=1000 FHIR_HOME=`pwd` psql -d <db> < generate.sql
 ```
 
 
