@@ -4,7 +4,6 @@
 
 num_rows=$1
 
-tpl=`cat encounter.tpl.json`
 types=("emergency" "inpatient")
 part_types=("ADM" "ATND" "CALLBCK" "CON" "DIS" "ESC" "REF")
 physs=("Charles R. Drew" "Helen Flanders Dunbar" "Galen" "Ian Olver" "Garcia de Orta" "Christiaan Eijkman" "Pierre Fauchard" "Rene Geronimo Favaloro" "Alexander Fleming" "Girolamo Fracastoro" "Sigmund Freud" "Daniel Carleton Gajdusek" "Henry Gray" "George E. Goodfellow" "William Harvey" "Ernst Haeckel" "Henry Heimlich" "Orvan Hess" "John Hunter" "Hippocrates" "Elliott P. Joslin" "Edward Jenner")
@@ -25,15 +24,15 @@ for ((i = 1; i <=$num_rows; i++)); do
     start_at=`date -d "$rand_y-$rand_m-$rand_d" '+%Y-%m-%d'`
     end_at=`date -d "$rand_y-$rand_m-$rand_ed" '+%Y-%m-%d'`
 
-    echo $tpl \
-        | sed -e s/{{id}}/$i/  \
-              -e "s/{{pt}}/Patient\/$i/"  \
-              -e "s/{{type}}/$type/"  \
-              -e "s/{{part_type}}/$part_type/"  \
-              -e "s/{{reason}}/$reason/"  \
-              -e "s/{{start_at}}/$start_at/"  \
-              -e "s/{{end_at}}/$end_at/"  \
-              -e "s/{{status}}/$status/"  \
-              -e "s/{{phys}}/$phys/"  \
-              -e ':a;N;$!ba;s/\n/ /g'
+    sed -e s/{{id}}/$i/  \
+        -e "s/{{pt}}/Patient\/$i/"  \
+        -e "s/{{type}}/$type/"  \
+        -e "s/{{part_type}}/$part_type/"  \
+        -e "s/{{reason}}/$reason/"  \
+        -e "s/{{start_at}}/$start_at/"  \
+        -e "s/{{end_at}}/$end_at/"  \
+        -e "s/{{status}}/$status/"  \
+        -e "s/{{phys}}/$phys/"  \
+        -e ':a;N;$!ba;s/\n/ /g' \
+        encounter.tpl.json
 done
