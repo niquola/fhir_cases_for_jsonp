@@ -39,7 +39,7 @@ for ((i = 1; i <= $num_rows; i++)); do
             apply='"appliesDateTime": "'"$rand_date1"'T09:30:10+01:00",'
         fi
         if (($apply_index == 1)); then
-            rand_d2=$(($rand_d+3))
+            rand_d2=$((rand_d + RANDOM%10+1))
             rand_date2="${rand_date}-"$rand_d2
             apply='"appliesPeriod": {"start": "'"$rand_date1"'T09:30:10+01:00", "end": "'"$rand_date2"'T09:30:10+01:00"},'
         fi
@@ -47,10 +47,10 @@ for ((i = 1; i <= $num_rows; i++)); do
         apply=""
     fi
 
-    sed -e "s/{{patient_id}}/$patient_id/g"  \
+    sed -e ':a;N;$!ba;s/\n/ /g' \
+        -e "s/{{patient_id}}/$patient_id/g"  \
         -e "s@{{name}}@$name@" \
         -e "s@{{applies}}@$apply@" \
         -e "s/{{status}}/$status/g" \
-        -e ':a;N;$!ba;s/\n/ /g' \
         template.json
 done

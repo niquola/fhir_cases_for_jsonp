@@ -47,7 +47,8 @@ for ((i = 1; i <= $num_rows; i++)); do
     start_at=`date -d "$rand_y-$rand_m-$rand_d" '+%Y-%m-%d'`
     end_at=`date -d "$rand_y-$rand_m-$rand_ed" '+%Y-%m-%d'`
 
-    sed -e s/{{id}}/$i/  \
+    sed -e ':a;N;$!ba;s/\n/ /g' \
+        -e s/{{id}}/$i/  \
         -e "s/{{pt}}/Patient\/$i/"  \
         -e "s/{{type}}/$type/"  \
         -e "s/{{part_type}}/$part_type/"  \
@@ -56,6 +57,5 @@ for ((i = 1; i <= $num_rows; i++)); do
         -e "s/{{end_at}}/$end_at/"  \
         -e "s/{{status}}/$status/"  \
         -e "s/{{phys}}/$phys/"  \
-        -e ':a;N;$!ba;s/\n/ /g' \
         encounter.tpl.json
 done
