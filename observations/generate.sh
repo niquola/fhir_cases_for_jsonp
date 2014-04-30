@@ -1,3 +1,7 @@
+# Profiling:
+# $ `time bash ./generate.sh 1000 > /dev/nul`
+# real    0m4.651s - 0m4.994s
+
 num_rows=$1
 
 names=(
