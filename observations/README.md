@@ -1,4 +1,4 @@
-## Cases for jsonp by Medclient HS-Choice
+## Cases for jsonb by Medclient HS-Choice
 
 ### Observation
 

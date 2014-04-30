@@ -1,4 +1,4 @@
-## Medclient cases for jsonp
+## Medclient cases for jsonb
 
 
 See in folders
