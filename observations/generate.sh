@@ -36,19 +36,12 @@ for ((i = 1; i <= $num_rows; i++)); do
         rand_date=`date -d "$rand_y-$rand_m-$rand_d" '+%Y-%m'`
         rand_date1="${rand_date}-"$rand_d
         if (($apply_index == 0)); then
-            apply=$(
-                echo '"appliesDateTime": "{{rand_date}}T09:30:10+01:00",' \
-                    | sed -e "s/{{rand_date}}/$rand_date1/"
-            )
+            apply='"appliesDateTime": "'"$rand_date1"'T09:30:10+01:00",'
         fi
         if (($apply_index == 1)); then
             rand_d2=$(($rand_d+3))
             rand_date2="${rand_date}-"$rand_d2
-            apply=$(
-                echo '"appliesPeriod": {"start": "{{rand_date}}T09:30:10+01:00", "end": "{{rand_date2}}T09:30:10+01:00"},' \
-                    | sed -e "s/{{rand_date}}/$rand_date1/" \
-                          -e "s/{{rand_date2}}/$rand_date2/"
-            )
+            apply='"appliesPeriod": {"start": "'"$rand_date1"'T09:30:10+01:00", "end": "'"$rand_date2"'T09:30:10+01:00"},'
         fi
     else
         apply=""
