@@ -20,7 +20,7 @@
     "coding": [{
       "system": "http://snomed.info/sct",
       "code": "{{.code}}",
-      "display": "{{.label}}"
+      "display": "{{.code}}"
     }]
   },
   "category": {

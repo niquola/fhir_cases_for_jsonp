@@ -348,6 +348,18 @@ select 'a < +10.1e+1'::jsquery;
  "a" < 101
 (1 row)
 
+select 'a in (0,1,2)'::jsquery;
+     jsquery      
+------------------
+ "a" IN (0, 1, 2)
+(1 row)
+
+select 'a in (0,null, "null", xxx, "zzz", 2)'::jsquery;
+                  jsquery                  
+-------------------------------------------
+ "a" IN (0, null, "null", "xxx", "zzz", 2)
+(1 row)
+
 select '{"a": {"b": null}}'::jsonb @@ 'a.b = 1';
  ?column? 
 ----------
@@ -606,13 +618,13 @@ select '[{"a": 2}, {"a": 3}, {"a": {"a":4}}]'::jsonb @@ '#.*.a.a = 4';
  t
 (1 row)
 
-select '{"a": 1}'::jsonb @@ 'a && [0,1,2]';
+select '{"a": 1}'::jsonb @@ 'a in (0,1,2)';
  ?column? 
 ----------
  t
 (1 row)
 
-select '{"a": 1}'::jsonb @@ 'a && [0,2]';
+select '{"a": 1}'::jsonb @@ 'a in (0,2)';
  ?column? 
 ----------
  f
@@ -625,6 +637,48 @@ select '{"a": {"b": [1,2,3]}}'::jsonb @@ 'a.b.#=2';
 (1 row)
 
 select '{"a": {"b": [1,2,3]}}'::jsonb @@ '*.b && [ 5 ]';
+ ?column? 
+----------
+ f
+(1 row)
+
+select '{"a": {"b": [1,2,3]}}'::jsonb @@ 'a=*';
+ ?column? 
+----------
+ t
+(1 row)
+
+select '{"a": {"b": [1,2,3]}}'::jsonb @@ 'a.b=*';
+ ?column? 
+----------
+ t
+(1 row)
+
+select '{"a": {"b": [1,2,3]}}'::jsonb @@ 'a.c=*';
+ ?column? 
+----------
+ f
+(1 row)
+
+select '{"a": {"b": [1,2,3]}}'::jsonb @@ 'a.b = [1,2,3]';
+ ?column? 
+----------
+ t
+(1 row)
+
+select '{"a": {"b": [1,2,3]}}'::jsonb @@ 'a.b.# = [1,2,3]';
+ ?column? 
+----------
+ f
+(1 row)
+
+select '{"a": {"b": [1,2,3]}}'::jsonb @@ 'a.b && [1,2,3]';
+ ?column? 
+----------
+ t
+(1 row)
+
+select '{"a": {"b": [1,2,3]}}'::jsonb @@ 'a.b.# && [1,2,3]';
  ?column? 
 ----------
  f

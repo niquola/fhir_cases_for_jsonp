@@ -1,3 +1,17 @@
+/*-------------------------------------------------------------------------
+ *
+ * jsquery_scan.l
+ *     Lexical parser for jsquery datatype
+ *
+ * Copyright (c) 2014, PostgreSQL Global Development Group
+ * Author: Teodor Sigaev <teodor@sigaev.ru>
+ *
+ * IDENTIFICATION
+ *    contrib/jsquery/jsquery_scan.l
+ *
+ *-------------------------------------------------------------------------
+ */
+
 %{
 static string scanstring;
 
@@ -146,7 +160,12 @@ checkSpecialVal()
 {
 	int res = STRING_P;
 
-	if (scanstring.len == 4)
+	if (scanstring.len == 2)
+	{
+		if (strncmp("in", scanstring.val, scanstring.len) == 0)
+			return IN_P;
+	}
+	else if (scanstring.len == 4)
 	{
 		if (strncmp("null", scanstring.val, scanstring.len) == 0)
 			res = NULL_P;

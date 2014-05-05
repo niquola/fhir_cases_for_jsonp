@@ -1,3 +1,17 @@
+/*-------------------------------------------------------------------------
+ *
+ * jsquery_io.c
+ *     I/O functions for jsquery datatype
+ *
+ * Copyright (c) 2014, PostgreSQL Global Development Group
+ * Author: Teodor Sigaev <teodor@sigaev.ru>
+ *
+ * IDENTIFICATION
+ *    contrib/jsquery/jsquery_io.c
+ *
+ *-------------------------------------------------------------------------
+ */
+
 #include "postgres.h"
 #include "miscadmin.h"
 #include "lib/stringinfo.h"
@@ -88,6 +102,7 @@ flattenJsQueryItem(StringInfo buf, JsQueryItem *item)
 			}
 			break;
 		case jqiEqual:
+		case jqiIn:
 		case jqiLess:
 		case jqiGreater:
 		case jqiLessOrEqual:
@@ -196,7 +211,7 @@ printOperation(StringInfo buf, int type)
 }
 
 static void
-printJsQueryItem(StringInfo buf, char *base, int32 pos, bool inKey)
+printJsQueryItem(StringInfo buf, char *base, int32 pos, bool inKey, bool printBracketes)
 {
 	int32		type;
 	int32		nextPos;
@@ -253,17 +268,19 @@ printJsQueryItem(StringInfo buf, char *base, int32 pos, bool inKey)
 				arrayPos = (int32*)(base + pos);
 				pos += nelems * sizeof(*arrayPos);
 
-				appendStringInfoChar(buf, '['); 
+				if (printBracketes)
+					appendStringInfoChar(buf, '['); 
 
 				for(i=0; i<nelems; i++)
 				{
 					if (i != 0)
 						appendBinaryStringInfo(buf, ", ", 2);
 
-					printJsQueryItem(buf, base, arrayPos[i], false);
+					printJsQueryItem(buf, base, arrayPos[i], false, true);
 				}
 
-				appendStringInfoChar(buf, ']');
+				if (printBracketes)
+					appendStringInfoChar(buf, ']');
 			}
 			break;
 		case jqiAnd:
@@ -275,9 +292,9 @@ printJsQueryItem(StringInfo buf, char *base, int32 pos, bool inKey)
 				read_int32(right, base, pos);
 
 				appendStringInfoChar(buf, '(');
-				printJsQueryItem(buf, base, left, false);
+				printJsQueryItem(buf, base, left, false, true);
 				printOperation(buf, type);
-				printJsQueryItem(buf, base, right, false);
+				printJsQueryItem(buf, base, right, false, true);
 				appendStringInfoChar(buf, ')');
 			}
 			break;
@@ -295,7 +312,18 @@ printJsQueryItem(StringInfo buf, char *base, int32 pos, bool inKey)
 				read_int32(arg, base, pos);
 
 				printOperation(buf, type);
-				printJsQueryItem(buf, base, arg, false);
+				printJsQueryItem(buf, base, arg, false, true);
+			}
+			break;
+		case jqiIn:
+			{
+				int32 arg;
+
+				read_int32(arg, base, pos);
+
+				appendBinaryStringInfo(buf, " IN (", 5);
+				printJsQueryItem(buf, base, arg, false, false);
+				appendStringInfoChar(buf, ')');
 			}
 			break;
 		case jqiNot:
@@ -305,7 +333,7 @@ printJsQueryItem(StringInfo buf, char *base, int32 pos, bool inKey)
 				read_int32(arg, base, pos);
 
 				appendBinaryStringInfo(buf, "!(", 2);
-				printJsQueryItem(buf, base, arg, false);
+				printJsQueryItem(buf, base, arg, false, true);
 				appendStringInfoChar(buf, ')');
 			}
 			break;
@@ -324,7 +352,7 @@ printJsQueryItem(StringInfo buf, char *base, int32 pos, bool inKey)
 	}
 
 	if (nextPos > 0)
-		printJsQueryItem(buf, base, nextPos, true);
+		printJsQueryItem(buf, base, nextPos, true, true);
 }
 
 PG_FUNCTION_INFO_V1(jsquery_out);
@@ -337,7 +365,7 @@ jsquery_out(PG_FUNCTION_ARGS)
 	initStringInfo(&buf);
 	enlargeStringInfo(&buf, VARSIZE(in) /* estimation */); 
 
-	printJsQueryItem(&buf, VARDATA(in), 0, false);
+	printJsQueryItem(&buf, VARDATA(in), 0, false, true);
 
 	PG_RETURN_CSTRING(buf.data);
 }

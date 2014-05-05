@@ -1,3 +1,17 @@
+/*-------------------------------------------------------------------------
+ *
+ * jsquery_gram.y
+ *     Grammar definitions for jsquery datatype
+ *
+ * Copyright (c) 2014, PostgreSQL Global Development Group
+ * Author: Teodor Sigaev <teodor@sigaev.ru>
+ *
+ * IDENTIFICATION
+ *    contrib/jsquery/jsquery_gram.y
+ *
+ *-------------------------------------------------------------------------
+ */
+
 %{
 #define YYPARSE_PARAM result  /* need this to pass a pointer (void *) to yyparse */
 
@@ -176,14 +190,14 @@ makeJsQueryItemList(List *list) {
 }
 
 %token	<str>			NULL_P STRING_P TRUE_P FALSE_P
-						NUMERIC_P
+						NUMERIC_P IN_P
 
 %type	<value>			result scalar_value 
 %type	<str>			key
 
-%type	<elems>			item_list value_list
+%type	<elems>			path value_list
 
-%type 	<value>			item right_expr expr array
+%type 	<value>			path_elem right_expr expr array
 
 %left '|'
 %left '&'
@@ -204,6 +218,7 @@ array:
 scalar_value:
 	NULL_P							{ $$ = makeJsQueryItemString(NULL); }
 	| STRING_P						{ $$ = makeJsQueryItemString(&$1); }
+	| IN_P							{ $$ = makeJsQueryItemString(&$1); }
 	| TRUE_P						{ $$ = makeJsQueryItemBool(true); }
 	| FALSE_P						{ $$ = makeJsQueryItemBool(false); }
 	| NUMERIC_P						{ $$ = makeJsQueryItemNumeric(&$1); }
@@ -216,6 +231,9 @@ value_list:
 
 right_expr:
 	'='	scalar_value				{ $$ = makeJsQueryItemUnary(jqiEqual, $2); }
+	| IN_P '(' value_list ')'		{ $$ = makeJsQueryItemUnary(jqiIn, makeJsQueryItemArray($3)); }
+	| '=' array						{ $$ = makeJsQueryItemUnary(jqiEqual, $2); }
+	| '=' '*'						{ $$ = makeJsQueryItemUnary(jqiEqual, makeJsQueryItemType(jqiAny)); }
 	| '<' NUMERIC_P					{ $$ = makeJsQueryItemUnary(jqiLess, makeJsQueryItemNumeric(&$2)); }
 	| '>' NUMERIC_P					{ $$ = makeJsQueryItemUnary(jqiGreater, makeJsQueryItemNumeric(&$2)); }
 	| '<' '=' NUMERIC_P				{ $$ = makeJsQueryItemUnary(jqiLessOrEqual, makeJsQueryItemNumeric(&$3)); }
@@ -226,8 +244,8 @@ right_expr:
 	;
 
 expr:
-	item_list right_expr			{ $$ = makeJsQueryItemList(lappend($1, $2)); }
-	| item_list '(' expr ')'		{ $$ = makeJsQueryItemList(lappend($1, $3)); }
+	path right_expr					{ $$ = makeJsQueryItemList(lappend($1, $2)); }
+	| path '(' expr ')'				{ $$ = makeJsQueryItemList(lappend($1, $3)); }
 	| '(' expr ')'					{ $$ = $2; }
 	| '!' expr 						{ $$ = makeJsQueryItemUnary(jqiNot, $2); }
 	| expr '&' expr					{ $$ = makeJsQueryItemBinary(jqiAnd, $1, $3); } 
@@ -243,17 +261,18 @@ key:
 	| FALSE_P						{ $$ = $1; }
 	| NUMERIC_P						{ $$ = $1; }
 	| NULL_P						{ $$ = $1; }
+	| IN_P							{ $$ = $1; }
 	;
 
-item:
+path_elem:
 	'*'								{ $$ = makeJsQueryItemType(jqiAny); }
 	| '#'							{ $$ = makeJsQueryItemType(jqiAnyArray); }
 	| key							{ $$ = makeJsQueryItemString(&$1); $$->type = jqiKey; }
 	;
 
-item_list:
-	item							{ $$ = lappend(NIL, $1); }
-	| item_list '.' item			{ $$ = lappend($1, $3); }
+path:
+	path_elem						{ $$ = lappend(NIL, $1); }
+	| path '.' path_elem			{ $$ = lappend($1, $3); }
 	;
 
 %%

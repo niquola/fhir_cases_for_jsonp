@@ -13,41 +13,23 @@ doc#>'{status}' as status
 FROM encounters
 WHERE
 doc @@
-'(
-  "class" = "emergency"
-  &
+'("class" = "emergency" &
   "participant".#."individual" (
-    "reference" = "Galen"
-    &
-    "type".#."coding".#
-    (
-      "code" && ["ADM", "ATND"]
-      &
-      "system" = "encounter-participant-type"
-    )
-  )
-  &
-  !("status" && ["planned", "finished", "cancelled"])
-)'
+    "reference" = "Galen" &
+    "type".#."coding".# (
+      "code" && ["ADM", "ATND"] &
+      "system" = "encounter-participant-type")) &
+  !("status" && ["planned", "finished", "cancelled"]))'
 limit 10;
 
 SELECT  count(*)
 FROM encounters
 WHERE
 doc @@
-'(
-  "class" = "emergency"
-  &
+'("class" = "emergency" &
   "participant".#."individual" (
-    "reference" = "Galen"
-    &
-    "type".#."coding".#
-    (
-      "code" && ["ADM", "ATND"]
-      &
-      "system" = "encounter-participant-type"
-    )
-  )
-  &
-  !("status" && ["planned", "finished", "cancelled"])
-)';
+    "reference" = "Galen" &
+    "type".#."coding".# (
+      "code" && ["ADM", "ATND"] &
+      "system" = "encounter-participant-type")) &
+  !("status" && ["planned", "finished", "cancelled"]))';

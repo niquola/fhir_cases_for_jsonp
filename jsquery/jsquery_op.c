@@ -1,6 +1,17 @@
-/*
- * contrib/jsquery/jsquery_op.c
+/*-------------------------------------------------------------------------
+ *
+ * jsquery_op.c
+ *     Functions and operations over jsquery/jsonb datatypes
+ *
+ * Copyright (c) 2014, PostgreSQL Global Development Group
+ * Author: Teodor Sigaev <teodor@sigaev.ru>
+ *
+ * IDENTIFICATION
+ *    contrib/jsquery/jsquery_op.c
+ *
+ *-------------------------------------------------------------------------
  */
+
 #include "postgres.h"
 
 #include "miscadmin.h"
@@ -10,6 +21,7 @@
 #include "jsquery.h"
 
 static bool recursiveExecute(char *jqBase, int32 jqPos, JsonbValue *jb);
+static bool executeExpr(char *jqBase, int32 jqPos, int32 op, JsonbValue *jb);
 
 static int
 compareNumeric(Numeric a, Numeric b)
@@ -62,8 +74,12 @@ checkEquality(char *jqBase, int32 jqPos, int32 type, JsonbValue *jb)
 {
 	int		len;
 
+	if (type == jqiAny)
+		return true;
+
 	if (jb->type == jbvBinary)
 		return false;
+
 	if (jb->type != type /* see enums */)
 		return false;
 
@@ -82,6 +98,115 @@ checkEquality(char *jqBase, int32 jqPos, int32 type, JsonbValue *jb)
 		default:
 			elog(ERROR,"Wrong state");
 	}
+}
+
+static bool
+checkArrayEquality(char *jqBase, int32 jqPos, int32 type, JsonbValue *jb)
+{
+	int32   		i, nelems, *arrayPos;
+	int32			r;
+	JsonbIterator	*it;
+	JsonbValue		v;
+
+	if (!(type == jqiArray && jb->type == jbvBinary))
+		return false;
+
+	read_int32(nelems, jqBase, jqPos);
+	arrayPos = (int32*)(jqBase + jqPos);
+
+	it = JsonbIteratorInit(jb->val.binary.data);
+
+	r = JsonbIteratorNext(&it, &v, true);
+
+	if (r != WJB_BEGIN_ARRAY)
+		return false;
+
+	if (v.val.array.nElems != nelems)
+		return false;
+
+	i = 0;
+	while((r = JsonbIteratorNext(&it, &v, true)) != WJB_DONE)
+	{
+		if (r == WJB_ELEM && i<nelems)
+		{
+			if (executeExpr(jqBase, arrayPos[i], jqiEqual, &v) == false)
+				return false;
+			i++;
+		}
+	}
+	
+	return true;
+}
+
+static bool
+checkIn(char *jqBase, int32 jqPos, int32 type, JsonbValue *jb)
+{
+	int32   i, nelems, *arrayPos;
+
+	if (jb->type == jbvBinary)
+		return false;
+
+	if (type != jqiArray)
+		return false;
+
+	read_int32(nelems, jqBase, jqPos);
+	arrayPos = (int32*)(jqBase + jqPos);
+
+	for(i=0; i<nelems; i++)
+		if (executeExpr(jqBase, arrayPos[i], jqiEqual, jb))
+			return true;
+
+	return false;
+}
+
+static bool
+executeArrayOp(char *jqBase, int32 jqPos, int32 type, int32 op, JsonbValue *jb)
+{
+	int32   		i, nelems, *arrayPos;
+	int32			r;
+	JsonbIterator	*it;
+	JsonbValue		v;
+	int32			nres = 0, nval = 0;
+
+	if (jb->type != jbvBinary)
+		return false;
+	if (type != jqiArray)
+		return false;
+
+	read_int32(nelems, jqBase, jqPos);
+	arrayPos = (int32*)(jqBase + jqPos);
+
+	it = JsonbIteratorInit(jb->val.binary.data);
+
+	while((r = JsonbIteratorNext(&it, &v, true)) != WJB_DONE)
+	{
+		if (r == WJB_BEGIN_ARRAY)
+			nval = v.val.array.nElems;
+
+		if (r == WJB_ELEM)
+		{
+			bool res = false;
+
+			for(i=0; i<nelems; i++)
+			{
+				if (executeExpr(jqBase, arrayPos[i], jqiEqual, &v))
+				{
+					if (op == jqiOverlap)
+						return true;
+					nres++;
+					res = true;
+					break;
+				}
+			}
+		}
+	}
+
+	if (op == jqiContains)
+		return (nres == nelems && nelems > 0);
+	if (op == jqiContained)
+		return (nres == nval && nval > 0);
+
+	return false;
 }
 
 static bool
@@ -108,8 +233,9 @@ makeCompare(char *jqBase, int32 jqPos, int32 type, int32 op, JsonbValue *jb)
 			return (res >= 0);
 		default:
 			elog(ERROR, "Unknown operation");
-			return false;
 	}
+
+	return false;
 }
 
 static bool
@@ -120,83 +246,37 @@ executeExpr(char *jqBase, int32 jqPos, int32 op, JsonbValue *jb)
 
 	check_stack_depth();
 
+	/*
+	 * read arg type 
+	 */
 	jqPos = readJsQueryHeader(jqBase, jqPos, &type, &nextPos);
 
 	Assert(nextPos == 0);
-	Assert(type == jqiString || type == jqiNumeric || type == jqiNull || type == jqiBool || type == jqiArray);
+	Assert(type == jqiAny || type == jqiString || type == jqiNumeric || 
+		   type == jqiNull || type == jqiBool || type == jqiArray);
 
-	if (op == jqiEqual)
+	switch(op)
 	{
-		return checkEquality(jqBase, jqPos, type, jb); 
+		case jqiEqual:
+			if (jb->type == jbvBinary && type == jqiArray)
+				return checkArrayEquality(jqBase, jqPos, type, jb);
+			return checkEquality(jqBase, jqPos, type, jb);
+		case jqiIn:
+			return checkIn(jqBase, jqPos, type, jb);
+		case jqiOverlap:
+		case jqiContains:
+		case jqiContained:
+			return executeArrayOp(jqBase, jqPos, type, op, jb);
+		case jqiLess:
+		case jqiGreater:
+		case jqiLessOrEqual:
+		case jqiGreaterOrEqual:
+			return makeCompare(jqBase, jqPos, type, op, jb);
+		default:
+			elog(ERROR, "Unknown operation");
 	}
-	else if (op == jqiOverlap && jb->type != jbvBinary)
-	{
-		/*
-		 * scalar && array emulates scalar IN ()
-		 */
-		int32   i, nelems, *arrayPos;
 
-		if (type != jqiArray)
-			return false;
-
-		read_int32(nelems, jqBase, jqPos);
-		arrayPos = (int32*)(jqBase + jqPos);
-
-		for(i=0; i<nelems; i++)
-			if (executeExpr(jqBase, arrayPos[i], jqiEqual, jb))
-				return true;
-
-		return false;
-	}
-	else if (op == jqiOverlap || op == jqiContains || op == jqiContained)
-	{
-		int32   i, nelems, *arrayPos;
-		int32	r;
-		JsonbIterator	*it;
-		JsonbValue		v;
-		int32			nres = 0, nval = 0;
-
-		if (jb->type != jbvBinary)
-			return false;
-		if (type != jqiArray)
-			return false;
-
-		read_int32(nelems, jqBase, jqPos);
-		arrayPos = (int32*)(jqBase + jqPos);
-
-		it = JsonbIteratorInit(jb->val.binary.data);
-
-		while((r = JsonbIteratorNext(&it, &v, true)) != WJB_DONE)
-		{
-			if (r == WJB_BEGIN_ARRAY)
-				nval = v.val.array.nElems;
-
-			if (r == WJB_ELEM)
-			{
-				bool res = false;
-
-				for(i=0; i<nelems; i++)
-				{
-					if (executeExpr(jqBase, arrayPos[i], jqiEqual, &v))
-					{
-						if (op == jqiOverlap)
-							return true;
-						nres++;
-						res = true;
-						break;
-					}
-				}
-			}
-		}
-
-		if (op == jqiContains)
-			return (nres == nelems && nelems > 0);
-		if (op == jqiContained)
-			return (nres == nval && nval > 0);
-		return false;
-	} else {
-		return makeCompare(jqBase, jqPos, type, op, jb);
-	}
+	return false;
 }
 
 static bool
@@ -273,6 +353,7 @@ recursiveExecute(char *jqBase, int32 jqPos, JsonbValue *jb)
 			}
 			break;
 		case jqiEqual:
+		case jqiIn:
 		case jqiLess:
 		case jqiGreater:
 		case jqiLessOrEqual:
@@ -418,6 +499,7 @@ compareJsQuery(char *base1, int32 pos1, char *base2, int32 pos2)
 			}
 			break;
 		case jqiEqual:
+		case jqiIn:
 		case jqiLess:
 		case jqiGreater:
 		case jqiLessOrEqual:
@@ -632,6 +714,7 @@ hashJsQuery(char *base, int32 pos, pg_crc32 *crc)
 			break;
 		case jqiNot:
 		case jqiEqual:
+		case jqiIn:
 		case jqiLess:
 		case jqiGreater:
 		case jqiLessOrEqual:

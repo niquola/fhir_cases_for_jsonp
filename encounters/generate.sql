@@ -1,3 +1,4 @@
+CREATE EXTENSION IF NOT EXISTS jsquery;
 DROP TABLE IF EXISTS encounters;
 CREATE TABLE encounters (
   id SERIAL primary key,

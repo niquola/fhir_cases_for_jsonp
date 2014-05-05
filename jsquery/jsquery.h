@@ -1,3 +1,17 @@
+/*-------------------------------------------------------------------------
+ *
+ * jsquery.h
+ *     Definitions of jsquery datatype
+ *
+ * Copyright (c) 2014, PostgreSQL Global Development Group
+ * Author: Teodor Sigaev <teodor@sigaev.ru>
+ *
+ * IDENTIFICATION
+ *    contrib/jsquery/jsquery.h
+ *
+ *-------------------------------------------------------------------------
+ */
+
 #ifndef __JSQUERY_H__
 #define __JSQUERY_H__
 
@@ -37,7 +51,8 @@ struct JsQueryItem {
 		jqiOverlap = '%',
 		jqiAny = '*',
 		jqiAnyArray = '#',
-		jqiKey = 'K'
+		jqiKey = 'K',
+		jqiIn = 'I'
 	} type;
 
 	union {
