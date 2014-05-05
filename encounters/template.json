@@ -7,10 +7,10 @@
   "identifier": [
   {
     "use": "temp",
-    "value": "{{id}}"
+    "value": "{{i}}"
   }],
   "status": "{{status}}",
-  "class": "{{type}}",
+  "class": "{{class}}",
   "type": [{
     "coding": [
     {
@@ -21,7 +21,7 @@
     ]
   }],
   "subject": {
-    "reference": "{{pt}}",
+    "reference": "Patient{{i}}",
     "display": "Roel"
   },
   "participant": [{
@@ -39,17 +39,15 @@
     "text": "{{reason}}"
   },
   "priority": {
-    "coding": [
-    {
+    "coding": [{
       "system": "http://snomed.info/sct",
       "code": "394849002",
       "display": "High priority"
-    }
-    ]
+    }]
   },
   "hospitalization": {
     "admitSource": {
-      "coding": [ {
+      "coding": [{
         "system": "http://snomed.info/sct",
         "code": "309902002",
         "display": "Clinical Oncology Department"

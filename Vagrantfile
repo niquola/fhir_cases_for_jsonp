@@ -11,6 +11,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   else
     config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/precise/current/precise-server-cloudimg-amd64-vagrant-disk1.box"
   end
+  config.vm.synced_folder ".", "/home/vagrant/jsonb"
 
   config.vm.provision :shell, path: "provision.sh"
   config.vm.network "forwarded_port", guest: 5432, host: 5435
