@@ -7,10 +7,10 @@
   "identifier": [
   {
     "use": "temp",
-    "value": "{{i}}"
+    "value": "{{.i}}"
   }],
-  "status": "{{status}}",
-  "class": "{{class}}",
+  "status": "{{.status}}",
+  "class": "{{.class}}",
   "type": [{
     "coding": [
     {
@@ -21,7 +21,7 @@
     ]
   }],
   "subject": {
-    "reference": "Patient{{i}}",
+    "reference": "Patient{{.i}}",
     "display": "Roel"
   },
   "participant": [{
@@ -29,14 +29,14 @@
       "type": [{
         "coding": [{
           "system": "encounter-participant-type",
-          "code": "{{part_type}}"
+          "code": "{{.part_type}}"
         }]
       }],
-      "reference": "{{phys}}"
+      "reference": "{{.phys}}"
     }
   }],
   "reason": {
-    "text": "{{reason}}"
+    "text": "{{.reason}}"
   },
   "priority": {
     "coding": [{
@@ -54,8 +54,8 @@
       }]
     },
     "period": {
-      "start": "{{start_time}}",
-      "end": "{{end_time}}"
+      "start": "{{.start_time}}",
+      "end": "{{.end_time}}"
     },
     "diet": {
       "coding": [

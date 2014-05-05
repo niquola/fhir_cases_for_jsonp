@@ -4,7 +4,7 @@
     "status": "generated",
     "div": ""
   },
-  {{name}}
+  {{.name}}
   "valueQuantity": {
     "value": 39,
       "units": "degrees C",
@@ -20,11 +20,11 @@
       ]
     },
     "appliesPeriod": {
-      "start": "{{start_time}}",
-      "end": "{{end_time}}"
+      "start": "{{.start_time}}",
+      "end": "{{.end_time}}"
     },
     "issued": "2013-04-04T13:27:00+01:00",
-    "status": "{{status}}",
+    "status": "{{.status}}",
     "reliability": "questionable",
     "bodySite": {
       "coding": [{
@@ -43,8 +43,8 @@
       ]
     },
     "subject": {
-      "reference": "Patient/{{id}}",
-      "display": "Patient {{id}}"
+      "reference": "Patient/{{.id}}",
+      "display": "Patient {{.id}}"
     },
     "performer": [
     {

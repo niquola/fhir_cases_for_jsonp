@@ -5,32 +5,32 @@
     "div": "some text"
   },
   "subject": {
-    "reference": "Patient/{{id}}",
-    "display": "Patient {{id}}"
+    "reference": "Patient/{{.id}}",
+    "display": "Patient {{.id}}"
   },
   "encounter": {
-    "reference": "Encounter/{{id}}"
+    "reference": "Encounter/{{.id}}"
   },
   "asserter": {
     "reference": "Patient/f001",
     "display": "P. van de Heuvel"
   },
-  "dateAsserted": "{{start_time}}",
+  "dateAsserted": "{{.start_time}}",
   "code": {
     "coding": [{
       "system": "http://snomed.info/sct",
-      "code": "{{code}}",
-      "display": "{{label}}"
+      "code": "{{.code}}",
+      "display": "{{.label}}"
     }]
   },
   "category": {
     "coding": [{
       "system": "http://snomed.info/sct",
-      "code": "{{category}}",
-      "display": "{{category}}"
+      "code": "{{.category}}",
+      "display": "{{.category}}"
     }]
   },
-  "status": "{{status}}",
+  "status": "{{.status}}",
   "severity": {
     "coding": [{
       "system": "http://snomed.info/sct",
@@ -38,7 +38,7 @@
       "display": "Moderate"
     }]
   },
-  "onsetDate": "{{end_time}}",
+  "onsetDate": "{{.end_time}}",
   "evidence": [ {
     "code": {
       "coding": [
