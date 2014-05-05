@@ -5,17 +5,17 @@
     "div": "some text"
   },
   "subject": {
-    "reference": "Patient/{{idx}}",
-    "display": "Patient {{idx}}"
+    "reference": "Patient/{{id}}",
+    "display": "Patient {{id}}"
   },
   "encounter": {
-    "reference": "Encounter/{{idx}}"
+    "reference": "Encounter/{{id}}"
   },
   "asserter": {
     "reference": "Patient/f001",
     "display": "P. van de Heuvel"
   },
-  "dateAsserted": "{{time_at}}",
+  "dateAsserted": "{{start_time}}",
   "code": {
     "coding": [{
       "system": "http://snomed.info/sct",
@@ -38,7 +38,7 @@
       "display": "Moderate"
     }]
   },
-  "onsetDate": "{{time_at}}",
+  "onsetDate": "{{end_time}}",
   "evidence": [ {
     "code": {
       "coding": [
@@ -55,9 +55,7 @@
         "system": "http://snomed.info/sct",
         "code": "40768004",
         "display": "Left thorax"
-      }
-      ]
-    },
+      }]},
     "detail": "heart structure"
   }]
 }

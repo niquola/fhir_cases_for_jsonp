@@ -54,8 +54,8 @@
       }]
     },
     "period": {
-      "start": "{{start_at}}",
-      "end": "{{end_at}}"
+      "start": "{{start_time}}",
+      "end": "{{end_time}}"
     },
     "diet": {
       "coding": [

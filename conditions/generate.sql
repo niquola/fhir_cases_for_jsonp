@@ -1,7 +1,3 @@
---db: -p 5455 -h localhost jsonb
---{{{
-\set prog `echo "cd $FHIR_HOME && bash generate.sh $FHIR_NUM"`
-
 DROP TABLE IF EXISTS stroke_diagnoses;
 CREATE TABLE stroke_diagnoses (
     id SERIAL NOT NULL,
@@ -28,15 +24,10 @@ COPY stroke_diagnoses (id, label, code, description, icd9cm_id) FROM stdin;
 14	INTRACEREBRAL HEMORRHAGE	431	Hemorrhagic Stroke	28064
 \.
 
-DROP TABLE IF EXISTS encounters;
-CREATE TABLE encounters (
+DROP TABLE IF EXISTS conditions;
+CREATE TABLE conditions (
   id SERIAL primary key,
   doc jsonb
 );
 
-COPY encounters (doc) FROM PROGRAM :'prog';
-
-select doc #>>'{code,coding}'
-from encounters
-limit 10;
---}}}
+COPY conditions (doc) FROM STDIN;

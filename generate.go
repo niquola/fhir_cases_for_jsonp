@@ -7,6 +7,7 @@ import (
     "strings"
     "math/rand"
     "strconv"
+    "time"
     )
 
 func repl(tpl string, k string, v string) string {
@@ -52,6 +53,10 @@ func main() {
     res := json_tpl
     res = repl(res, "i", strconv.Itoa(i))
     res = repl(res, "id", strconv.Itoa(i))
+    t := time.Date(2009 + rand.Intn(5), time.Month(rand.Intn(11)), rand.Intn(25), rand.Intn(24), rand.Intn(60), 0, 0, time.Local)
+    t_end := t.Add(time.Duration(rand.Intn(1000)) * time.Hour)
+    res = repl(res, "start_time", t.UTC().Format(time.RFC3339))
+    res = repl(res, "end_time", t_end.UTC().Format(time.RFC3339))
     for k, v := range m {
       res = repl(res, k, sample(v))
     }

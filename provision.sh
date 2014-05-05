@@ -18,7 +18,7 @@ cd ~/postgres
 make
 sudo make install
 
-cp ~/jsonb/jsquery/jsquery ~/postgresql/contrib
+cp -R ~/jsonb/jsquery ~/postgresql/contrib
 cd ~/postgresql/contrib/jsquery
 make
 sudo make install

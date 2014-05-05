@@ -96,17 +96,3 @@ clojure/edn style
         :code #in ["ADM","ATND"]
         :system "encounter-participant-type" }}}}
 ```
-
-To generate test data:
-
-```bash
-
-  git clone https://github.com/niquola/fhir_cases_for_jsonp.git
-
-  cd fhir_cases_for_jsonp/encounters
-
-  env FHIR_NUM=1000 FHIR_HOME=`pwd` psql -d <db> < generate.sql
-```
-
-
-Generation script in generate_encouters.sh

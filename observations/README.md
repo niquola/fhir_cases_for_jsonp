@@ -47,12 +47,3 @@ OR
 appliesDateTime >= "2014-01-29T09:30:10+01:00",
 
 ```
-
-To generate & fill observations table
-
-```bash
-
-  cd fhir_cases_for_jsonp/conditions
-
-  env FHIR_NUM=1000 FHIR_HOME=`pwd` psql -d <db> < generate.sql
-```

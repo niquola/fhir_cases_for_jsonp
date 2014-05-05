@@ -2,7 +2,7 @@
 # $ `time bash ./generate.sh 1000 > /dev/nul`
 # real    ~ 0m4.730s
 
-num_rows=$1
-cd encounters
+num_rows=$2
+cd "$1"
 cat generate.sql
 ./../generate $num_rows
