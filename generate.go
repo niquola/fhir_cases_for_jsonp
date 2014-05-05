@@ -55,9 +55,9 @@ func main() {
     mdl = make(map[string]interface{})
       mdl["id"] = i
       mdl["i"] = i
-      t := time.Date(2009 + rand.Intn(5), time.Month(rand.Intn(11)), rand.Intn(25), rand.Intn(24), rand.Intn(60), 0, 0, time.Local)
-      mdl["start_time"]  = t
-      mdl["end_time"]   = t.Add(time.Duration(rand.Intn(1000)) * time.Hour)
+      t := time.Date(2014 - rand.Intn(5), time.Month(rand.Intn(11)), rand.Intn(25), rand.Intn(24), rand.Intn(60), 0, 0, time.Local)
+      mdl["start_time"]  = t.UTC().Format(time.RFC3339)
+      mdl["end_time"]   = t.Add(time.Duration(rand.Intn(1000)) * time.Hour).UTC().Format(time.RFC3339)
       for k, v := range m {
         mdl[k]=sample(v)
       }
